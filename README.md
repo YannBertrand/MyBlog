@@ -1,3 +1,4 @@
 # MyBlog
+[![Build Status](https://travis-ci.org/YannBertrand/MyBlog.svg?branch=master)](https://travis-ci.org/YannBertrand/MyBlog)
 
-a [Sails](http://sailsjs.org) application
+A simple blog website
