@@ -29,6 +29,12 @@ module.exports = {
       type: 'text',
       required: true,
       minLength: 15
+    },
+
+    // A One-to-Many association with the Comment model
+    article: {
+      model: 'Article',
+      required: true
     }
 
   }
