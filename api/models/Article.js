@@ -35,8 +35,8 @@ function createArticleVersion(values, cb) {
 function destroyArticleVersions(articleId, cb) {
   ArticleHistory
     .destroy({ article: articleId })
-    .exec(function (err, destroyedInstances) {
-      return cb(err, destroyedInstances);
+    .exec(function (err, oldInstances) {
+      return cb(err, oldInstances);
     });
 }
 
@@ -134,9 +134,9 @@ module.exports = {
 
   afterDestroy: function (values, cb) {
     async.each(values, function (value, next) {
-      destroyArticleVersions(value.id, function (err, destroyedInstances) {
+      destroyArticleVersions(value.id, function (err, oldInstances) {
         var msg = 'Error while destroying article versions';
-        handleError(err, destroyedInstances, msg, next, next);
+        handleError(err, oldInstances, msg, next, next);
       });
     }, function (err) {
       return cb(err);
