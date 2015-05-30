@@ -53,13 +53,7 @@ module.exports = {
     // A Many-to-Many association with the Tag model
     tags: {
       collection: 'Tag',
-      via: 'articleVersions'
-    },
-
-    // A One-to-Many association with the Comment model
-    comments: {
-      collection: 'Comment',
-      via: 'articleVersion'
+      via: 'articleRevisions'
     }
 
   }
