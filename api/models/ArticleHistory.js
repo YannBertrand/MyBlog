@@ -24,7 +24,6 @@ module.exports = {
     title: {
       type: 'string',
       required: true,
-      unique: true,
       minLength: 3
     },
 
@@ -32,7 +31,6 @@ module.exports = {
     slug: {
       type: 'string',
       required: true,
-      unique: true,
       alphanumericdashed: true,
       minLength: 2
     },
