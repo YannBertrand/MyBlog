@@ -32,10 +32,20 @@ function createArticleVersion(values, cb) {
   });
 }
 
+function destroyArticleVersions(articleId, cb) {
+  ArticleHistory
+    .destroy({ article: articleId })
+    .exec(function (err, destroyedInstances) {
+      return cb(err, destroyedInstances);
+    });
+}
+
 function handleError(err, instance, msg, fail, done) {
   if(err)
     return fail(err);
   if(!instance)
+    return fail(msg);
+  if(typeof instance === 'array' && !instance.length)
     return fail(msg);
 
   return done();
@@ -96,6 +106,8 @@ module.exports = {
   },
 
   afterCreate: function (values, cb) {
+    if(!values.id) return cb('err');
+
     values.revisionNumber = 1;
 
     createArticleVersion(values, function (err, newInstance) {
@@ -105,6 +117,8 @@ module.exports = {
   },
 
   afterUpdate: function (values, cb) {
+    if(!values.id) return cb('err');
+
     findLastArticleVersion(values.id, function (err, lastInstance) {
       var msg = 'No article version found for article id ' + values.id;
       handleError(err, lastInstance, msg, cb, function () {
@@ -115,6 +129,17 @@ module.exports = {
           return handleError(err, newInstance, msg, cb, cb);
         });
       });
+    });
+  },
+
+  afterDestroy: function (values, cb) {
+    async.each(values, function (value, next) {
+      destroyArticleVersions(value.id, function (err, destroyedInstances) {
+        var msg = 'Error while destroying article versions';
+        handleError(err, destroyedInstances, msg, next, next);
+      });
+    }, function (err) {
+      return cb(err);
     });
   }
 };

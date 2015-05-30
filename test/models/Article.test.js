@@ -375,6 +375,26 @@ describe('ArticleModel', function() {
 
     });
 
+    it('should have create an article revision', function (done) {
+
+      ArticleHistory.find({ article: id })
+        .exec(function(err, results) {
+          should(err).be.null;
+
+          should(results).not.be.undefined;
+          results.should.be.an.Array;
+          results.should.have.lengthOf(1);
+
+          var result = results[0];
+
+          result.should.be.an.Object;
+          result.should.have.property('id');
+
+          done();
+      });
+
+    });
+
   });
 
 
@@ -418,6 +438,143 @@ describe('ArticleModel', function() {
           should(result).not.be.undefined;
           result.should.be.an.Object;
           result.should.have.property('id');
+
+          done();
+      });
+
+    });
+
+  });
+
+
+
+  describe('#update()', function() {
+
+    it('should return an empty array when providing an unnexisting id', function (done) {
+
+      Article.update(123, { content: '.tema tis rolod muspi meroL' })
+        .exec(function(err, results) {
+          should(err).be.null;
+
+          should(results).not.be.undefined;
+          results.should.be.an.Array;
+          results.should.have.lengthOf(0);
+
+          done();
+      });
+
+    });
+
+    it('should succeed when giving real informations', function (done) {
+
+      var newContent = '.tema tis rolod muspi meroL';
+
+      Article.update(id, { content: newContent })
+        .exec(function(err, results) {
+          should(err).be.null;
+
+          should(results).not.be.undefined;
+          results.should.be.an.Array;
+          results.should.have.lengthOf(1);
+
+          var result = results[0];
+          
+          result.should.be.an.Object;
+          result.should.have.property('id', id);
+          result.should.have.property('content', newContent);
+
+          done();
+      });
+
+    });
+
+  });
+
+
+
+  describe('#find()', function() {
+
+    it('should create another article revision', function (done) {
+
+      ArticleHistory.find({ article: id })
+        .exec(function(err, results) {
+          should(err).be.null;
+
+          should(results).not.be.undefined;
+          results.should.be.an.Array;
+          results.should.have.lengthOf(2);
+
+          var result = results[0];
+
+          result.should.be.an.Object;
+          result.should.have.property('id');
+          result.should.have.property('revisionNumber', 1);
+
+          result = results[1];
+
+          result.should.be.an.Object;
+          result.should.have.property('id');
+          result.should.have.property('revisionNumber', 2);
+
+          done();
+      });
+
+    });
+
+  });
+
+
+
+  describe('#destroy()', function() {
+    it('should return an empty array when providing an unknown id', function (done) {
+
+      Article.destroy(123)
+        .exec(function(err, results) {
+          should(err).be.null;
+
+          should(results).not.be.undefined;
+          results.should.be.an.Array;
+          results.should.have.lengthOf(0);
+
+          done();
+      });
+
+    });
+
+    it('should destroy the article when giving a real id', function (done) {
+
+      Article.destroy(id)
+        .exec(function(err, results) {
+          should(err).be.null;
+
+          should(results).not.be.undefined;
+          results.should.be.an.Array;
+          results.should.have.lengthOf(1);
+
+          var result = results[0];
+
+          result.should.be.an.Object;
+          result.should.have.property('id', id);
+
+          done();
+      });
+        
+    });
+  });
+
+
+
+  describe('#find()', function() {
+
+    it('should destroy the article revisions', function (done) {
+
+      ArticleHistory.find({ article: id })
+        .exec(function(err, results) {
+          should(err).be.null;
+
+          should(results).not.be.undefined;
+          results.should.be.an.Array;
+          results.should.have.lengthOf(0);
 
           done();
       });
